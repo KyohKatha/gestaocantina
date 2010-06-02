@@ -151,7 +151,6 @@ public class FormPrincipal extends javax.swing.JFrame {
                 new FormPrincipal().setVisible(true);
             }
         });
-        System.out.println("só testando o SVN!");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
