@@ -17,6 +17,56 @@ public class Produto {
     private String nome;
     private int qtdAtual;
     private int qtdSeguranca;
+    private double valorUnitCusto;
+    private double valorUnitVenda;
+    private int qtdMediaMensal;
+    //tipo: A = 0 B = 1 C = 2
+    private double porcentagem;
+
+    public double getPorcentagem() {
+        return porcentagem;
+    }
+
+    public void setPorcentagem(double porcentagem) {
+        this.porcentagem = porcentagem;
+    }
+    private int tipo;
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    public double valorProdutoEstoque() {
+        return valorUnitCusto * qtdMediaMensal;
+    }
+
+    public int getQtdMediaMensal() {
+        return qtdMediaMensal;
+    }
+
+    public void setQtdMediaMensal(int qtdMediaMensal) {
+        this.qtdMediaMensal = qtdMediaMensal;
+    }
+
+        public double getValorUnitCusto() {
+        return valorUnitCusto;
+    }
+
+    public void setValorUnitCusto(double valorCusto) {
+        this.valorUnitCusto = valorCusto;
+    }
+
+    public double getValorUnitVenda() {
+        return valorUnitVenda;
+    }
+
+    public void setValorUnitVenda(double valorVenda) {
+        this.valorUnitVenda = valorVenda;
+    }
 
     public Produto(){
         historico = new ArrayList<DadosMes>();

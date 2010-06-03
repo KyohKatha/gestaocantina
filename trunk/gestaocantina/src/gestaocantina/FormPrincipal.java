@@ -8,19 +8,28 @@
  *
  * Created on 02/06/2010, 13:02:00
  */
-
 package gestaocantina;
 
+import Classes.ACP;
 import Classes.DadosMes;
 import Classes.Produto;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import jxl.*;
 import jxl.read.biff.BiffException;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -32,6 +41,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     public FormPrincipal() {
         initComponents();
         this.setSize(500, 500);
+        acp = new ACP();
     }
 
     /** This method is called from within the constructor to
@@ -57,7 +67,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProduto = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        ltituloCurvaABC = new javax.swing.JLabel();
+        lCurva = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -100,6 +111,12 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
+
         jPanelDados.setLayout(new java.awt.BorderLayout());
         jPanelDados.add(jPanel2, java.awt.BorderLayout.PAGE_END);
 
@@ -131,8 +148,11 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        jLabel5.setText("Curva ABC");
-        jPanel3.add(jLabel5, java.awt.BorderLayout.CENTER);
+        ltituloCurvaABC.setText("Curva ABC");
+        jPanel3.add(ltituloCurvaABC, java.awt.BorderLayout.PAGE_START);
+
+        lCurva.setText("Curva");
+        jPanel3.add(lCurva, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.addTab("Curva ABC", jPanel3);
 
@@ -178,7 +198,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
     private void txtCaminhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaminhoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCaminhoActionPerformed
@@ -186,34 +205,73 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void btnAbrirPlanilhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAbrirPlanilhaMouseClicked
         // TODO add your handling code here:
         String caminhoArquivo = txtCaminho.getText();
-        if (!caminhoArquivo.equals("")){
-        ArrayList<Produto> produtos = carregarDados(caminhoArquivo);
+        if (!caminhoArquivo.equals("")) {
+            ArrayList<Produto> produtos = carregarDados(caminhoArquivo);
+            acp.setProdutos(produtos);
+            jTableProduto.removeAll();
 
-        jTableProduto.removeAll();
+            DefaultTableModel dtm = (DefaultTableModel) jTableProduto.getModel();
+            DecimalFormat format = new DecimalFormat();
+            format.setMaximumFractionDigits(2);
+            format.setMinimumFractionDigits(2);
 
-        DefaultTableModel dtm = (DefaultTableModel) jTableProduto.getModel();
-        DecimalFormat format = new DecimalFormat();
-        format.setMaximumFractionDigits(2);
-        format.setMinimumFractionDigits(2);
+            for (int i = 0; i < produtos.size(); i++) {
+                Produto p = produtos.get(i);
+                ArrayList<DadosMes> dados = p.getHistorico();
+                double dCusto = p.getValorUnitCusto();
 
-        for (int i = 0; i < produtos.size(); i++) {
-            Produto p = produtos.get(i);
-            ArrayList<DadosMes> dados = p.getHistorico();
-            double dCusto = dados.get(dados.size() - 1).getValorUnitCusto();
-
-            dtm.addRow(new Object[]{p.getNome(),p.getQtdAtual(),format.format(dCusto)});
-        }
+                dtm.addRow(new Object[]{p.getNome(), p.getQtdAtual(), format.format(dCusto)});
+            }
         } else {
             JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnAbrirPlanilhaMouseClicked
 
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handling code here:
+        if (acp.getProdutos().isEmpty()) {
+            ltituloCurvaABC.setText("Erro: Carregue o arquivo de dados!");
+        } else {
+            ltituloCurvaABC.setText("Curva ABC");
+            acp.gerarABC();
+            this.gerarGrafico();
+        }
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void gerarGrafico() {
+        ArrayList<Produto> produtos = acp.getProdutos();
+        double acumulada = 0.0;
+        double dI = 0.0;
+        
+        XYSeries series = new XYSeries("");
+        for(int i = 0; i < produtos.size(); i++){
+            acumulada += produtos.get(i).getPorcentagem()*100;
+            dI += 1.0;
+            series.add(acumulada, dI);
+        /*while(produtos.get(i).getTipo() == 0)
+            i++;
+        series.add(produtos.get(i).getPorcentagem()*100, 5.0);
+        while(produtos.get(i).getTipo() == 1)
+            i++;
+        series.add(produtos.get(i).getPorcentagem()*100, 10.0);*/
+        }
+        XYDataset xyDataset = new XYSeriesCollection(series);
+        
+        JFreeChart chart = ChartFactory.createXYAreaChart("Curva ABC", "Porcentagem", "Produto", xyDataset, PlotOrientation.HORIZONTAL, true, false, false);
+
+        BufferedImage image = chart.createBufferedImage(800, 300);
+        
+        lCurva.setIcon(new ImageIcon(image));
+        lCurva.repaint();
+    }
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new FormPrincipal().setVisible(true);
             }
@@ -241,64 +299,64 @@ public class FormPrincipal extends javax.swing.JFrame {
                 int col;
 
                 //Le nome do produto
-                cell = sheet.getCell(col2,lin);
+                cell = sheet.getCell(col2, lin);
                 Produto produto = new Produto();
                 produto.setNome(cell.getContents());
                 ArrayList<DadosMes> dadosmes = new ArrayList<DadosMes>();
 
-                System.out.println("Produto "+produto.getNome());
+                System.out.println("Produto " + produto.getNome());
 
                 NumberCell ncell;
-                
+
                 for (col = col2 + 1; col < iNumColunas - 2; col++) {
                     DadosMes dados = new DadosMes();
                     //Le mês
-                    cell = sheet.getCell(col,0);
+                    cell = sheet.getCell(col, 0);
                     String sMes = cell.getContents();
                     dados.setMes(sMes);
-                    System.out.print("    Mes "+dados.getMes());
+                    System.out.print("    Mes " + dados.getMes());
 
                     //Le ano
-                    ncell = (NumberCell) sheet.getCell(col + 1,0);
+                    ncell = (NumberCell) sheet.getCell(col + 1, 0);
                     dados.setAno((int) ncell.getValue());
-                    System.out.println("    Ano "+dados.getAno());
+                    System.out.println("    Ano " + dados.getAno());
 
                     //Le qtde comprada
-                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setQtdCompra((int) ncell.getValue());
                     col++;
-                    System.out.println("        Qtde Comp  "+dados.getQtdCompra());
+                    System.out.println("        Qtde Comp  " + dados.getQtdCompra());
 
                     //Le preço de custo
-                    ncell = (NumberCell) sheet.getCell(col,lin);
-                    dados.setValorUnitCusto(ncell.getValue());
+                    ncell = (NumberCell) sheet.getCell(col, lin);
+                    produto.setValorUnitCusto(ncell.getValue());
                     col++;
-                    System.out.println("        Custo Unit "+dados.getValorUnitCusto());
+                    System.out.println("        Custo Unit " + produto.getValorUnitCusto());
 
                     //Le qtde venda
-                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setQtdVenda((int) ncell.getValue());
                     col++;
-                    System.out.println("        Qtde Venda "+dados.getQtdVenda());
+                    System.out.println("        Qtde Venda " + dados.getQtdVenda());
 
                     //Le preço de venda
-                    ncell = (NumberCell) sheet.getCell(col,lin);
-                    dados.setValorUnitVenda(ncell.getValue());
-                    System.out.println("        Preco Unit "+dados.getValorUnitVenda());
+                    ncell = (NumberCell) sheet.getCell(col, lin);
+                    produto.setValorUnitVenda(ncell.getValue());
+                    System.out.println("        Preco Unit " + produto.getValorUnitVenda());
 
                     produto.addHistorico(dados);
                 }
-                
+
                 //Le qtde atual
-                ncell = (NumberCell) sheet.getCell(col,lin);
+                ncell = (NumberCell) sheet.getCell(col, lin);
                 produto.setQtdAtual((int) ncell.getValue());
                 col++;
-                System.out.println("    Qtd "+produto.getQtdAtual());
+                System.out.println("    Qtd " + produto.getQtdAtual());
 
                 //Le estoque de seguranca
-                ncell = (NumberCell) sheet.getCell(col,lin);
+                ncell = (NumberCell) sheet.getCell(col, lin);
                 produto.setQtdSeguranca((int) ncell.getValue());
-                System.out.println("    Sec "+produto.getQtdSeguranca());
+                System.out.println("    Sec " + produto.getQtdSeguranca());
 
                 produtos.add(produto);
             }
@@ -313,7 +371,6 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         return produtos;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirPlanilha;
     private javax.swing.JButton jButton2;
@@ -321,7 +378,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
@@ -337,7 +393,10 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableProduto;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lCurva;
+    private javax.swing.JLabel ltituloCurvaABC;
     private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
     private final String nomeSistema = "Gestão Cantina";
+    private ACP acp;
 }
