@@ -4,7 +4,9 @@
  */
 package Classes;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import jxl.*;
 
 /**
  *
@@ -56,5 +58,9 @@ public class Produto {
 
     public void setQtdSeguranca(int qtdSeguranca) {
         this.qtdSeguranca = qtdSeguranca;
+    }
+
+    public void carregaDados(String caminhoArquivo) throws IOException{
+
     }
 }
