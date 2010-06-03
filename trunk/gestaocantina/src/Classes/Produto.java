@@ -6,7 +6,6 @@ package Classes;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import jxl.*;
 
 /**
  *
@@ -20,7 +19,7 @@ public class Produto {
     private int qtdSeguranca;
 
     public Produto(){
-        historico = new ArrayList();
+        historico = new ArrayList<DadosMes>();
     }
     
     public ArrayList<DadosMes> getHistorico() {
@@ -59,8 +58,5 @@ public class Produto {
     public void setQtdSeguranca(int qtdSeguranca) {
         this.qtdSeguranca = qtdSeguranca;
     }
-
-    public void carregaDados(String caminhoArquivo) throws IOException{
-
-    }
 }
+

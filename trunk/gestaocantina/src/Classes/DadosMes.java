@@ -10,6 +10,8 @@ package Classes;
  * @author Katha
  */
 public class DadosMes {
+    private String mes;
+    private int ano;
     private double valorUnitCusto;
     private double valorUnitVenda;
     private int qtdCompra;
@@ -45,6 +47,34 @@ public class DadosMes {
 
     public void setValorUnitVenda(double valorVenda) {
         this.valorUnitVenda = valorVenda;
+    }
+
+    /**
+     * @return the mes
+     */
+    public String getMes() {
+        return mes;
+    }
+
+    /**
+     * @param mes the mes to set
+     */
+    public void setMes(String mes) {
+        this.mes = mes;
+    }
+
+    /**
+     * @return the ano
+     */
+    public int getAno() {
+        return ano;
+    }
+
+    /**
+     * @param ano the ano to set
+     */
+    public void setAno(int ano) {
+        this.ano = ano;
     }
 
 }
