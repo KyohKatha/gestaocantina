@@ -11,6 +11,17 @@
 
 package gestaocantina;
 
+import Classes.DadosMes;
+import Classes.Produto;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import jxl.*;
+import jxl.read.biff.BiffException;
+
 /**
  *
  * @author Katha
@@ -35,13 +46,16 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
+        btnAbrirPlanilha = new javax.swing.JButton();
+        txtCaminho = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanelDados = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableProduto = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -61,16 +75,21 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jButton1.setText("Abrir");
-        jPanel1.add(jButton1, java.awt.BorderLayout.LINE_END);
-
-        jTextField2.setText("Caminho do arquivo");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+        btnAbrirPlanilha.setText("Abrir");
+        btnAbrirPlanilha.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAbrirPlanilhaMouseClicked(evt);
             }
         });
-        jPanel1.add(jTextField2, java.awt.BorderLayout.CENTER);
+        jPanel1.add(btnAbrirPlanilha, java.awt.BorderLayout.LINE_END);
+
+        txtCaminho.setText("Gestao Cantina.xls");
+        txtCaminho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCaminhoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtCaminho, java.awt.BorderLayout.CENTER);
 
         jLabel1.setText("Arquivo:  ");
         jPanel1.add(jLabel1, java.awt.BorderLayout.LINE_START);
@@ -81,12 +100,34 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanelDados.setLayout(new java.awt.BorderLayout());
+        jPanelDados.add(jPanel2, java.awt.BorderLayout.PAGE_END);
 
-        jLabel4.setText("Exibir dados carregados do arquivo");
-        jPanel2.add(jLabel4);
+        jPanel8.setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.addTab("Dados", jPanel2);
+        jTableProduto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Item", "Qtd Estoque", "Custo Unitário"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTableProduto);
+
+        jPanel8.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanelDados.add(jPanel8, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane1.addTab("Dados", jPanelDados);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -123,11 +164,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 651, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 235, Short.MAX_VALUE)
+            .addGap(0, 427, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("MRP", jPanel7);
@@ -138,9 +179,35 @@ public class FormPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtCaminhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCaminhoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtCaminhoActionPerformed
+
+    private void btnAbrirPlanilhaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAbrirPlanilhaMouseClicked
+        // TODO add your handling code here:
+        String caminhoArquivo = txtCaminho.getText();
+        if (!caminhoArquivo.equals("")){
+        ArrayList<Produto> produtos = carregarDados(caminhoArquivo);
+
+        jTableProduto.removeAll();
+
+        DefaultTableModel dtm = (DefaultTableModel) jTableProduto.getModel();
+        DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(2);
+
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto p = produtos.get(i);
+            ArrayList<DadosMes> dados = p.getHistorico();
+            double dCusto = dados.get(dados.size() - 1).getValorUnitCusto();
+
+            dtm.addRow(new Object[]{p.getNome(),p.getQtdAtual(),format.format(dCusto)});
+        }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_btnAbrirPlanilhaMouseClicked
 
     /**
     * @param args the command line arguments
@@ -153,14 +220,107 @@ public class FormPrincipal extends javax.swing.JFrame {
         });
     }
 
+    private ArrayList<Produto> carregarDados(String caminhoArquivo) {
+        ArrayList<Produto> produtos = new ArrayList<Produto>();
+        try {
+            Workbook workbook = Workbook.getWorkbook(new File(caminhoArquivo));
+            Sheet sheet = workbook.getSheet("CONTROLE");
+
+            //Le número de linhas preenchidas na planilha
+            Cell cell = sheet.getCell("IV1");
+            String sNumLinhas = cell.getContents();
+            int iNumLinhas = Integer.parseInt(sNumLinhas);
+
+            //Le número de colunas preenchidas na planilha
+            cell = sheet.getCell("IV2");
+            String sNumColunas = cell.getContents();
+            int iNumColunas = Integer.parseInt(sNumColunas);
+
+            for (int lin = 2; lin < iNumLinhas; lin++) {
+                int col2 = 0;
+                int col;
+
+                //Le nome do produto
+                cell = sheet.getCell(col2,lin);
+                Produto produto = new Produto();
+                produto.setNome(cell.getContents());
+                ArrayList<DadosMes> dadosmes = new ArrayList<DadosMes>();
+
+                System.out.println("Produto "+produto.getNome());
+
+                NumberCell ncell;
+                
+                for (col = col2 + 1; col < iNumColunas - 2; col++) {
+                    DadosMes dados = new DadosMes();
+                    //Le mês
+                    cell = sheet.getCell(col,0);
+                    String sMes = cell.getContents();
+                    dados.setMes(sMes);
+                    System.out.print("    Mes "+dados.getMes());
+
+                    //Le ano
+                    ncell = (NumberCell) sheet.getCell(col + 1,0);
+                    dados.setAno((int) ncell.getValue());
+                    System.out.println("    Ano "+dados.getAno());
+
+                    //Le qtde comprada
+                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    dados.setQtdCompra((int) ncell.getValue());
+                    col++;
+                    System.out.println("        Qtde Comp  "+dados.getQtdCompra());
+
+                    //Le preço de custo
+                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    dados.setValorUnitCusto(ncell.getValue());
+                    col++;
+                    System.out.println("        Custo Unit "+dados.getValorUnitCusto());
+
+                    //Le qtde venda
+                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    dados.setQtdVenda((int) ncell.getValue());
+                    col++;
+                    System.out.println("        Qtde Venda "+dados.getQtdVenda());
+
+                    //Le preço de venda
+                    ncell = (NumberCell) sheet.getCell(col,lin);
+                    dados.setValorUnitVenda(ncell.getValue());
+                    System.out.println("        Preco Unit "+dados.getValorUnitVenda());
+
+                    produto.addHistorico(dados);
+                }
+                
+                //Le qtde atual
+                ncell = (NumberCell) sheet.getCell(col,lin);
+                produto.setQtdAtual((int) ncell.getValue());
+                col++;
+                System.out.println("    Qtd "+produto.getQtdAtual());
+
+                //Le estoque de seguranca
+                ncell = (NumberCell) sheet.getCell(col,lin);
+                produto.setQtdSeguranca((int) ncell.getValue());
+                System.out.println("    Sec "+produto.getQtdSeguranca());
+
+                produtos.add(produto);
+            }
+
+            workbook.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler " + caminhoArquivo, nomeSistema, JOptionPane.ERROR_MESSAGE);
+        }
+
+        System.out.println("fim");
+
+        return produtos;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAbrirPlanilha;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -171,9 +331,13 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanelDados;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTableProduto;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
-
+    private final String nomeSistema = "Gestão Cantina";
 }
