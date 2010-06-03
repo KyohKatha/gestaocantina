@@ -11,9 +11,7 @@ package Classes;
  */
 public class DadosMes {
     private String mes;
-    private int ano;
-    private double valorUnitCusto;
-    private double valorUnitVenda;
+    private int ano;    
     private int qtdCompra;
     private int qtdVenda;
 
@@ -31,22 +29,6 @@ public class DadosMes {
 
     public void setQtdVenda(int qtdVenda) {
         this.qtdVenda = qtdVenda;
-    }
-
-    public double getValorUnitCusto() {
-        return valorUnitCusto;
-    }
-
-    public void setValorUnitCusto(double valorCusto) {
-        this.valorUnitCusto = valorCusto;
-    }
-
-    public double getValorUnitVenda() {
-        return valorUnitVenda;
-    }
-
-    public void setValorUnitVenda(double valorVenda) {
-        this.valorUnitVenda = valorVenda;
     }
 
     /**
