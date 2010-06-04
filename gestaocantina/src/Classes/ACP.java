@@ -33,12 +33,16 @@ public class ACP {
         //calcula a media mensal de quantidade comprada de cada produto
         for (int i = 0; i < produtos.size(); i++) {
             ArrayList<DadosMes> h = produtos.get(i).getHistorico();
-            int qtdMedia = 0;
+            int qtdMediaCompra = 0;
+            double qtdMediaCusto = 0;
             for (int j = 0; j < h.size(); j++) {
-                qtdMedia += h.get(j).getQtdCompra();
+                qtdMediaCompra += h.get(j).getQtdCompra();
+                qtdMediaCusto += h.get(j).getValorUnitCusto();
             }
-            qtdMedia /= h.size();
-            produtos.get(i).setQtdMediaMensal(qtdMedia);
+            qtdMediaCompra /= h.size();
+            qtdMediaCusto /= h.size();
+            produtos.get(i).setQtdMediaMensal(qtdMediaCompra);
+            produtos.get(i).setCustoMedioMensal(qtdMediaCusto);
             System.out.println("Produto1: " + produtos.get(i).getNome());
             valorTotalEstoque += produtos.get(i).valorProdutoEstoque();
         }
