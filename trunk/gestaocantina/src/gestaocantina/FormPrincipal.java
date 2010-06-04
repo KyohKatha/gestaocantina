@@ -218,7 +218,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             for (int i = 0; i < produtos.size(); i++) {
                 Produto p = produtos.get(i);
                 ArrayList<DadosMes> dados = p.getHistorico();
-                double dCusto = p.getValorUnitCusto();
+                double dCusto = dados.get(dados.size() - 1).getValorUnitCusto();
 
                 dtm.addRow(new Object[]{p.getNome(), p.getQtdAtual(), format.format(dCusto)});
             }
@@ -329,9 +329,9 @@ public class FormPrincipal extends javax.swing.JFrame {
 
                     //Le preço de custo
                     ncell = (NumberCell) sheet.getCell(col, lin);
-                    produto.setValorUnitCusto(ncell.getValue());
+                    dados.setValorUnitCusto(ncell.getValue());
                     col++;
-                    System.out.println("        Custo Unit " + produto.getValorUnitCusto());
+                    System.out.println("        Custo Unit " + dados.getValorUnitCusto());
 
                     //Le qtde venda
                     ncell = (NumberCell) sheet.getCell(col, lin);
@@ -341,8 +341,8 @@ public class FormPrincipal extends javax.swing.JFrame {
 
                     //Le preço de venda
                     ncell = (NumberCell) sheet.getCell(col, lin);
-                    produto.setValorUnitVenda(ncell.getValue());
-                    System.out.println("        Preco Unit " + produto.getValorUnitVenda());
+                    dados.setValorUnitVenda(ncell.getValue());
+                    System.out.println("        Preco Unit " + dados.getValorUnitVenda());
 
                     produto.addHistorico(dados);
                 }

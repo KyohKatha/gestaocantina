@@ -17,9 +17,16 @@ public class Produto {
     private String nome;
     private int qtdAtual;
     private int qtdSeguranca;
-    private double valorUnitCusto;
-    private double valorUnitVenda;
     private int qtdMediaMensal;
+    private double custoMedioMensal;
+
+    public double getCustoMedioMensal() {
+        return custoMedioMensal;
+    }
+
+    public void setCustoMedioMensal(double custoMedioMensal) {
+        this.custoMedioMensal = custoMedioMensal;
+    }
     //tipo: A = 0 B = 1 C = 2
     private double porcentagem;
 
@@ -41,7 +48,7 @@ public class Produto {
     }
 
     public double valorProdutoEstoque() {
-        return valorUnitCusto * qtdMediaMensal;
+        return custoMedioMensal * qtdMediaMensal;
     }
 
     public int getQtdMediaMensal() {
@@ -50,22 +57,6 @@ public class Produto {
 
     public void setQtdMediaMensal(int qtdMediaMensal) {
         this.qtdMediaMensal = qtdMediaMensal;
-    }
-
-        public double getValorUnitCusto() {
-        return valorUnitCusto;
-    }
-
-    public void setValorUnitCusto(double valorCusto) {
-        this.valorUnitCusto = valorCusto;
-    }
-
-    public double getValorUnitVenda() {
-        return valorUnitVenda;
-    }
-
-    public void setValorUnitVenda(double valorVenda) {
-        this.valorUnitVenda = valorVenda;
     }
 
     public Produto(){

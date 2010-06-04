@@ -14,6 +14,24 @@ public class DadosMes {
     private int ano;    
     private int qtdCompra;
     private int qtdVenda;
+    private double valorUnitCusto;
+    private double valorUnitVenda;
+
+            public double getValorUnitCusto() {
+        return valorUnitCusto;
+    }
+
+    public void setValorUnitCusto(double valorCusto) {
+        this.valorUnitCusto = valorCusto;
+    }
+
+    public double getValorUnitVenda() {
+        return valorUnitVenda;
+    }
+
+    public void setValorUnitVenda(double valorVenda) {
+        this.valorUnitVenda = valorVenda;
+    }
 
     public int getQtdCompra() {
         return qtdCompra;
