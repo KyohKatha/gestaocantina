@@ -69,16 +69,15 @@ public class ACP {
         double numProdTipoC = produtos.size() * 0.5;
         System.out.println("A: " + numProdTipoA + "B: " + numProdTipoB + "C: " + numProdTipoC);
         int i = 0;
-        while (i < numProdTipoA) {
-            produtos.get(i).setTipo(0);
-            i++;
-        }
-        while (i < numProdTipoB + numProdTipoA) {
-            produtos.get(i).setTipo(1);
-            i++;
-        }
-        while (i < numProdTipoC + numProdTipoB + numProdTipoA) {
-            produtos.get(i).setTipo(2);
+        float acumulada = 0;
+        while (i < produtos.size()) {
+            acumulada += produtos.get(i).getPorcentagem()*100;
+            if(acumulada < 80)
+                produtos.get(i).setTipo(0);
+            else if(acumulada < 95)
+                produtos.get(i).setTipo(1);
+            else
+                produtos.get(i).setTipo(2);
             i++;
         }
         for (i = 0; i < produtos.size(); i++) {
