@@ -13,10 +13,12 @@ package gestaocantina;
 import Classes.ACP;
 import Classes.DadosMes;
 import Classes.Produto;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,7 +28,11 @@ import jxl.*;
 import jxl.read.biff.BiffException;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -68,6 +74,9 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTableProduto = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         ltituloCurvaABC = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        lLegendaProdutos = new javax.swing.JLabel();
         lCurva = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -151,8 +160,21 @@ public class FormPrincipal extends javax.swing.JFrame {
         ltituloCurvaABC.setText("Curva ABC");
         jPanel3.add(ltituloCurvaABC, java.awt.BorderLayout.PAGE_START);
 
-        lCurva.setText("Curva");
-        jPanel3.add(lCurva, java.awt.BorderLayout.CENTER);
+        jPanel9.setLayout(new java.awt.GridLayout());
+
+        jPanel10.setLayout(new java.awt.BorderLayout());
+
+        lLegendaProdutos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lLegendaProdutos.setText("Legenda");
+        jPanel10.add(lLegendaProdutos, java.awt.BorderLayout.LINE_END);
+
+        lCurva.setText("Aguarde: gráfico sendo carregado...");
+        lCurva.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel10.add(lCurva, java.awt.BorderLayout.CENTER);
+
+        jPanel9.add(jPanel10);
+
+        jPanel3.add(jPanel9, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.addTab("Curva ABC", jPanel3);
 
@@ -184,11 +206,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 651, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 427, Short.MAX_VALUE)
+            .addGap(0, 320, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("MRP", jPanel7);
@@ -234,6 +256,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             ltituloCurvaABC.setText("Erro: Carregue o arquivo de dados!");
         } else {
             ltituloCurvaABC.setText("Curva ABC");
+            lCurva.setText("Aguarde: gráfico sendo carregado...");
             acp.gerarABC();
             this.gerarGrafico();
         }
@@ -243,27 +266,63 @@ public class FormPrincipal extends javax.swing.JFrame {
         ArrayList<Produto> produtos = acp.getProdutos();
         double acumulada = 0.0;
         double dI = 0.0;
-        
+        DefaultCategoryDataset defaultCategoryDataset = new DefaultCategoryDataset();
+        char tipo;
         XYSeries series = new XYSeries("");
-        for(int i = 0; i < produtos.size(); i++){
-            acumulada += produtos.get(i).getPorcentagem()*100;
+        for (int i = 0; i < produtos.size(); i++) {
+            acumulada += produtos.get(i).getPorcentagem() * 100;
             dI += 1.0;
             series.add(acumulada, dI);
-        /*while(produtos.get(i).getTipo() == 0)
+            if(produtos.get(i).getTipo() == 0)
+                tipo = 'A';
+            else if(produtos.get(i).getTipo() == 1)
+                tipo = 'B';
+            else
+                tipo = 'C';
+            defaultCategoryDataset.addValue((Number) acumulada, tipo, i);
+            /*while(produtos.get(i).getTipo() == 0)
             i++;
-        series.add(produtos.get(i).getPorcentagem()*100, 5.0);
-        while(produtos.get(i).getTipo() == 1)
+            series.add(produtos.get(i).getPorcentagem()*100, 5.0);
+            while(produtos.get(i).getTipo() == 1)
             i++;
-        series.add(produtos.get(i).getPorcentagem()*100, 10.0);*/
+            series.add(produtos.get(i).getPorcentagem()*100, 10.0);*/
         }
         XYDataset xyDataset = new XYSeriesCollection(series);
-        
-        JFreeChart chart = ChartFactory.createXYAreaChart("Curva ABC", "Porcentagem", "Produto", xyDataset, PlotOrientation.HORIZONTAL, true, false, false);
 
-        BufferedImage image = chart.createBufferedImage(800, 300);
-        
+        //JFreeChart chart = ChartFactory.createXYAreaChart("Curva ABC", "Porcentagem", "Produto", xyDataset, PlotOrientation.HORIZONTAL, true, false, false);
+        JFreeChart chart = ChartFactory.createAreaChart("Curva ABC", "Produto", "Porcentagem", defaultCategoryDataset, PlotOrientation.VERTICAL, true, true, true);
+        //JFreeChart chart = ChartFactory.createLineChart("Curva ABC", "Produto", "Porcentagem", defaultCategoryDataset, PlotOrientation.VERTICAL, true, false, false);
+        chart.setBackgroundPaint(Color.LIGHT_GRAY);
+        chart.getTitle().setPaint(Color.BLACK);
+        CategoryPlot p = chart.getCategoryPlot();
+        p.setForegroundAlpha(0.4f);
+
+        p.setRangeGridlinePaint(Color.red);
+        CategoryItemRenderer renderer = p.getRenderer();
+        /*for (int i = 0; i < produtos.size(); i++) {
+            if(produtos.get(i).getTipo() == 0)
+                renderer.setSeriesPaint(i, Color.ORANGE);
+            else if(produtos.get(i).getTipo() == 1)
+                renderer.setSeriesPaint(i, Color.BLUE);
+            else
+                renderer.setSeriesPaint(i, Color.GREEN);
+        }*/
+        renderer.setSeriesPaint(0, Color.ORANGE);
+        renderer.setSeriesPaint(1, Color.BLUE);
+        renderer.setSeriesPaint(2, Color.GREEN);
+        BufferedImage image = chart.createBufferedImage(1000, 500);
+
         lCurva.setIcon(new ImageIcon(image));
+        lCurva.setText("");
         lCurva.repaint();
+        String textoLegenda = "<html>Produtos<br><br>";
+        textoLegenda += "<table border=\"1\">";
+        textoLegenda += "<tr><td>Numero</td><td>Nome</td><td>Numero</td><td>Nome</td></tr>";
+        for (int i = 0; i < produtos.size()/2; i++) {
+            textoLegenda += "<tr><td>" + i + "</td><td>" + produtos.get(i).getNome() + "</td><td>" + (i+13) + "</td><td>" + produtos.get(i+13).getNome() + "</td></tr>";
+        }
+        textoLegenda += "</table></html>";
+        lLegendaProdutos.setText(textoLegenda);
     }
 
     /**
@@ -381,6 +440,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -388,12 +448,14 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelDados;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableProduto;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lCurva;
+    private javax.swing.JLabel lLegendaProdutos;
     private javax.swing.JLabel ltituloCurvaABC;
     private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
