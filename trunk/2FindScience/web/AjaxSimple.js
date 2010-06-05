@@ -464,7 +464,6 @@ function validateFormEvent1(){
     return true;
 }
 
-
 function closeMessageBox(){
     if (document.getElementById("msg") != null )
         document.getElementById("msg").innerHTML="";
@@ -636,7 +635,6 @@ function loadDate(type){
     callServlet('Calendar?cod=' + type + '&name=' + name + '&local=' + local +
         '&sDate=' + sDate + '&eDate=' + eDate, 'events_data');
 }
-
 
 function validateFormEvent2(cod){
     form = document.getElementById("formEvent");
