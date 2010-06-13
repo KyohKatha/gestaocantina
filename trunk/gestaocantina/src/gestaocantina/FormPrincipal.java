@@ -36,6 +36,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  *
@@ -85,7 +86,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
+        jPanelMRP = new javax.swing.JPanel();
+        jComboBoxMRP = new javax.swing.JComboBox();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableMRP = new javax.swing.JTable();
 
         jTextField1.setText("jTextField1");
 
@@ -160,7 +165,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         ltituloCurvaABC.setText("Curva ABC");
         jPanel3.add(ltituloCurvaABC, java.awt.BorderLayout.PAGE_START);
 
-        jPanel9.setLayout(new java.awt.GridLayout());
+        jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel10.setLayout(new java.awt.BorderLayout());
 
@@ -202,18 +207,52 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Políticas de Estoque", jPanel4);
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 487, Short.MAX_VALUE)
+        jComboBoxMRP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione produto", "Salgado", "Pizza", "Lanche Natural", "Achocolatado" }));
+        jComboBoxMRP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxMRPActionPerformed(evt);
+            }
+        });
+
+        jTableMRP.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Item", "Informações", "Semanas", "Quarta-feira", "Quinta-feira", "Sexta-feira"
+            }
+        ));
+        jScrollPane2.setViewportView(jTableMRP);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("MRP", jPanel7);
+        javax.swing.GroupLayout jPanelMRPLayout = new javax.swing.GroupLayout(jPanelMRP);
+        jPanelMRP.setLayout(jPanelMRPLayout);
+        jPanelMRPLayout.setHorizontalGroup(
+            jPanelMRPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelMRPLayout.createSequentialGroup()
+                .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(376, 376, 376))
+        );
+        jPanelMRPLayout.setVerticalGroup(
+            jPanelMRPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMRPLayout.createSequentialGroup()
+                .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("MRP", jPanelMRP);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
@@ -229,9 +268,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         String caminhoArquivo = txtCaminho.getText();
         if (!caminhoArquivo.equals("")) {
             ArrayList<Produto> produtos = carregarDados(caminhoArquivo);
+
             acp.setProdutos(produtos);
             jTableProduto.removeAll();
 
+            
             DefaultTableModel dtm = (DefaultTableModel) jTableProduto.getModel();
             DecimalFormat format = new DecimalFormat();
             format.setMaximumFractionDigits(2);
@@ -244,10 +285,10 @@ public class FormPrincipal extends javax.swing.JFrame {
 
                 dtm.addRow(new Object[]{p.getNome(), p.getQtdAtual(), format.format(dCusto)});
             }
+
         } else {
             JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_btnAbrirPlanilhaMouseClicked
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
@@ -261,6 +302,58 @@ public class FormPrincipal extends javax.swing.JFrame {
             this.gerarGrafico();
         }
     }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void jComboBoxMRPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMRPActionPerformed
+        String sProduto = jComboBoxMRP.getSelectedItem().toString();
+
+        if (!sProduto.equals("Selecione produto")) {
+            String sCaminho = txtCaminho.getText();
+            if (!sCaminho.equals("")) {
+                ArrayList<Produto> produtos = carregarMRP(sCaminho, sProduto);
+
+                //acp.setProdutos(produtos);
+                jTableMRP.removeAll();
+
+                DefaultTableModel dtm = (DefaultTableModel) jTableMRP.getModel();
+                /*
+                DecimalFormat format = new DecimalFormat();
+                format.setMaximumFractionDigits(2);
+                format.setMinimumFractionDigits(2);
+                 */
+
+                for (int i = 0; i < produtos.size(); i++) {
+                    Produto p = produtos.get(i);
+
+                    System.out.println("NOME :: " + p.getNome());
+                    //ArrayList<DadosMes> dados = p.getHistorico();
+                    //double dCusto = dados.get(dados.size() - 1).getValorUnitCusto();
+                    if (i == 0) {
+                        dtm.addRow(new Object[]{"Código", p.getNome(), "Demanda", "", "", p.getiDemanda()});
+                        dtm.addRow(new Object[]{"Tipo Lote", p.getsTipoLote(), "Recebimento previsto", "", "", p.getiRecPrevisto()});
+                        dtm.addRow(new Object[]{"Lead Time", p.getsLeadTime(), "Estoque", "", "", p.getiEstoque()});
+                        dtm.addRow(new Object[]{"Estoque segurança", p.getQtdSeguranca(), "Necessidades líquidas", "", "", p.getiNecLiquida()});
+                        dtm.addRow(new Object[]{"Estoque inicial", p.getQtdAtual(), "Quantidade da OF ou OC", "", p.getiQtdOF_OC(), ""});
+                        dtm.addRow(new Object[]{"", "", "", "", "", ""});
+                    }else{
+                        dtm.addRow(new Object[]{"Código", p.getNome(), "Demanda", "", p.getiDemanda(), ""});
+                        dtm.addRow(new Object[]{"Tipo Lote", p.getsTipoLote(), "Recebimento previsto", "", p.getiRecPrevisto(), ""});
+                        dtm.addRow(new Object[]{"Lead Time", p.getsLeadTime(), "Estoque", "", p.getiEstoque(),"" });
+                        dtm.addRow(new Object[]{"Estoque segurança", p.getQtdSeguranca(), "Necessidades líquidas", "", p.getiNecLiquida(), ""});
+                        dtm.addRow(new Object[]{"Estoque inicial", p.getQtdAtual(), "Quantidade da OF ou OC", p.getiQtdOF_OC(), "", ""});
+                        dtm.addRow(new Object[]{"", "", "", "", "", ""});
+
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.WARNING_MESSAGE);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Selecione o produto a ser realizado MRP !", nomeSistema, JOptionPane.WARNING_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_jComboBoxMRPActionPerformed
 
     private void gerarGrafico() {
         ArrayList<Produto> produtos = acp.getProdutos();
@@ -430,10 +523,215 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         return produtos;
     }
+
+    private ArrayList<Produto> carregarMRP(String caminhoArquivo, String sAProduto) {
+        ArrayList<Produto> aProdutos = new ArrayList<Produto>();
+        try {
+            Workbook workbook = Workbook.getWorkbook(new File(caminhoArquivo));
+            Sheet sheet = workbook.getSheet("MRP");
+
+
+            if (sAProduto.equals("Salgado")) {
+
+                for (int iLinha = 1; iLinha <= 73; iLinha = iLinha + 6) {
+                    Produto objProduto = new Produto();
+
+                    String sNome = sheet.getCell(1, iLinha).getContents();
+                    String sTipoLote = sheet.getCell(1, iLinha + 1).getContents();
+                    String sLeadTime = sheet.getCell(1, iLinha + 2).getContents();
+                    String sQtdSeguranca = sheet.getCell(1, iLinha + 3).getContents();
+                    String sQtdAtual = sheet.getCell(1, iLinha + 4).getContents();
+                    String sDemanda;
+                    int iQtdSeguranca = Integer.parseInt(sQtdSeguranca);
+                    int iQtdAtual = Integer.parseInt(sQtdAtual);
+
+
+                    objProduto.setNome(sNome);
+                    objProduto.setsTipoLote(sTipoLote);
+                    objProduto.setsLeadTime(sLeadTime);
+                    objProduto.setQtdAtual(iQtdAtual);
+                    objProduto.setQtdSeguranca(iQtdSeguranca);
+
+                    if (iLinha == 1) {
+                        sDemanda = sheet.getCell(5, iLinha).getContents();
+                    } else {
+                        sDemanda = sheet.getCell(4, iLinha).getContents();
+                    }
+                    int iDemanda = Integer.parseInt(sDemanda);
+                    objProduto.setiDemanda(iDemanda);
+
+                    objProduto.setiNecLiquida(acp.calcularNecessidadeLiquidaMRP(iDemanda, iQtdAtual, iQtdSeguranca));
+
+                    if (objProduto.getsTipoLote().equals("LL")) {
+                        objProduto.setiQtdOF_OC(objProduto.getiNecLiquida());
+                        objProduto.setiRecPrevisto(objProduto.getiNecLiquida());
+                    }
+
+                    objProduto.setiEstoque(acp.calcularEstoqueAtualMRP(objProduto.getQtdAtual(), objProduto.getiRecPrevisto(), objProduto.getiDemanda()));
+
+                    aProdutos.add(objProduto);
+
+                }
+
+            } else {
+                if (sAProduto.equals("Pizza")) {
+
+                    for (int iLinha = 80; iLinha <= 158; iLinha = iLinha + 6) {
+
+                        Produto objProduto = new Produto();
+
+                        String sNome = sheet.getCell(1, iLinha).getContents();
+                        String sTipoLote = sheet.getCell(1, iLinha + 1).getContents();
+                        String sLeadTime = sheet.getCell(1, iLinha + 2).getContents();
+                        String sQtdSeguranca = sheet.getCell(1, iLinha + 3).getContents();
+                        String sQtdAtual = sheet.getCell(1, iLinha + 4).getContents();
+                        String sDemanda;
+                        int iQtdSeguranca = Integer.parseInt(sQtdSeguranca);
+                        int iQtdAtual = Integer.parseInt(sQtdAtual);
+
+
+                        objProduto.setNome(sNome);
+                        objProduto.setsTipoLote(sTipoLote);
+                        objProduto.setsLeadTime(sLeadTime);
+                        objProduto.setQtdAtual(iQtdAtual);
+                        objProduto.setQtdSeguranca(iQtdSeguranca);
+
+                        if (iLinha == 80) {
+                            sDemanda = sheet.getCell(5, iLinha).getContents();
+                        } else {
+                            sDemanda = sheet.getCell(4, iLinha).getContents();
+                        }
+                        int iDemanda = Integer.parseInt(sDemanda);
+                        objProduto.setiDemanda(iDemanda);
+
+                        objProduto.setiNecLiquida(acp.calcularNecessidadeLiquidaMRP(iDemanda, iQtdAtual, iQtdSeguranca));
+
+                        if (objProduto.getsTipoLote().equals("LL")) {
+                            objProduto.setiQtdOF_OC(objProduto.getiNecLiquida());
+                            objProduto.setiRecPrevisto(objProduto.getiNecLiquida());
+                        }
+
+                        objProduto.setiEstoque(acp.calcularEstoqueAtualMRP(objProduto.getQtdAtual(), objProduto.getiRecPrevisto(), objProduto.getiDemanda()));
+
+                        aProdutos.add(objProduto);
+                    }
+
+                } else {
+                    if (sAProduto.equals("Lanche Natural")) {
+
+                        for (int iLinha = 165; iLinha <= 201; iLinha = iLinha + 6) {
+
+                            Produto objProduto = new Produto();
+
+                            String sNome = sheet.getCell(1, iLinha).getContents();
+                            String sTipoLote = sheet.getCell(1, iLinha + 1).getContents();
+                            String sLeadTime = sheet.getCell(1, iLinha + 2).getContents();
+                            String sQtdSeguranca = sheet.getCell(1, iLinha + 3).getContents();
+                            String sQtdAtual = sheet.getCell(1, iLinha + 4).getContents();
+                            String sDemanda;
+                            int iQtdSeguranca = Integer.parseInt(sQtdSeguranca);
+                            int iQtdAtual = Integer.parseInt(sQtdAtual);
+
+
+                            objProduto.setNome(sNome);
+                            objProduto.setsTipoLote(sTipoLote);
+                            objProduto.setsLeadTime(sLeadTime);
+                            objProduto.setQtdAtual(iQtdAtual);
+                            objProduto.setQtdSeguranca(iQtdSeguranca);
+
+                            if (iLinha == 165) {
+                                sDemanda = sheet.getCell(5, iLinha).getContents();
+                            } else {
+                                sDemanda = sheet.getCell(4, iLinha).getContents();
+                            }
+                            int iDemanda = Integer.parseInt(sDemanda);
+                            objProduto.setiDemanda(iDemanda);
+
+                            objProduto.setiNecLiquida(acp.calcularNecessidadeLiquidaMRP(iDemanda, iQtdAtual, iQtdSeguranca));
+
+                            if (objProduto.getsTipoLote().equals("LL")) {
+                                objProduto.setiQtdOF_OC(objProduto.getiNecLiquida());
+                                objProduto.setiRecPrevisto(objProduto.getiNecLiquida());
+                            }
+
+                            objProduto.setiEstoque(acp.calcularEstoqueAtualMRP(objProduto.getQtdAtual(), objProduto.getiRecPrevisto(), objProduto.getiDemanda()));
+
+                            aProdutos.add(objProduto);
+
+
+                        }
+                    }else{
+                          if (sAProduto.equals("Achocolatado")) {
+
+                        for (int iLinha = 208; iLinha <= 220; iLinha = iLinha + 6) {
+
+                            Produto objProduto = new Produto();
+
+                            String sNome = sheet.getCell(1, iLinha).getContents();
+                            String sTipoLote = sheet.getCell(1, iLinha + 1).getContents();
+                            String sLeadTime = sheet.getCell(1, iLinha + 2).getContents();
+                            String sQtdSeguranca = sheet.getCell(1, iLinha + 3).getContents();
+                            String sQtdAtual = sheet.getCell(1, iLinha + 4).getContents();
+                            String sDemanda;
+                            int iQtdSeguranca = Integer.parseInt(sQtdSeguranca);
+                            int iQtdAtual = Integer.parseInt(sQtdAtual);
+
+
+                            objProduto.setNome(sNome);
+                            objProduto.setsTipoLote(sTipoLote);
+                            objProduto.setsLeadTime(sLeadTime);
+                            objProduto.setQtdAtual(iQtdAtual);
+                            objProduto.setQtdSeguranca(iQtdSeguranca);
+
+                            if (iLinha == 208) {
+                                sDemanda = sheet.getCell(5, iLinha).getContents();
+                            } else {
+                                sDemanda = sheet.getCell(4, iLinha).getContents();
+                            }
+                            int iDemanda = Integer.parseInt(sDemanda);
+                            objProduto.setiDemanda(iDemanda);
+
+                            objProduto.setiNecLiquida(acp.calcularNecessidadeLiquidaMRP(iDemanda, iQtdAtual, iQtdSeguranca));
+
+                            if (objProduto.getsTipoLote().equals("LL")) {
+                                objProduto.setiQtdOF_OC(objProduto.getiNecLiquida());
+                                objProduto.setiRecPrevisto(objProduto.getiNecLiquida());
+                            }
+
+                            objProduto.setiEstoque(acp.calcularEstoqueAtualMRP(objProduto.getQtdAtual(), objProduto.getiRecPrevisto(), objProduto.getiDemanda()));
+
+                            aProdutos.add(objProduto);
+
+
+                        }
+                    }
+                    }
+                }
+            }
+            workbook.close();
+        } catch (NumberFormatException nfe) {
+            System.out.println("NumberFormatException: " + nfe.getMessage());
+            //e.printStackTrace();
+            //JOptionPane.showMessageDialog(rootPane, "Erro ao ler " + caminhoArquivo, nomeSistema, JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+        }
+
+        System.out.println("fim de ler MRP");
+
+        return aProdutos;
+    }
+
+    boolean isDigit(String s) {
+        return s.matches("[1-100]");
+    }
+
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirPlanilha;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBoxMRP;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -441,17 +739,20 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelDados;
+    private javax.swing.JPanel jPanelMRP;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTableMRP;
     private javax.swing.JTable jTableProduto;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lCurva;
