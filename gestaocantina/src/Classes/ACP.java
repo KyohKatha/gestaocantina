@@ -88,6 +88,18 @@ public class ACP {
     public void MRP() {
     }
 
+    public float calcularDemandaMRP(float fAQuantidade, float fA_OF_OC_Pai){
+        return fAQuantidade * fA_OF_OC_Pai;
+    }
+
+    public int calcularNecessidadeLiquidaMRP(int iADemanda, int iAEstoqueInicial, int iAEstoqueSeguranca){
+        return iADemanda - iAEstoqueInicial + iAEstoqueSeguranca;
+    }
+
+    public int calcularEstoqueAtualMRP(int iAEstoqueInicial, int iARecPrevisto, int iADemanda){
+        return iAEstoqueInicial + iARecPrevisto - iADemanda;
+    }
+
     public void loteEconomicoPedidos() {
     }
 
