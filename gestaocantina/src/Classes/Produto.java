@@ -20,6 +20,15 @@ public class Produto {
     private int qtdMediaMensal;
     private double custoMedioMensal;
 
+    // MRP
+    private String sTipoLote;
+    private String sLeadTime;
+    private int iDemanda;
+    private int iRecPrevisto;
+    private int iEstoque;
+    private int iNecLiquida;
+    private int iQtdOF_OC;
+
     public double getCustoMedioMensal() {
         return custoMedioMensal;
     }
@@ -98,6 +107,95 @@ public class Produto {
 
     public void setQtdSeguranca(int qtdSeguranca) {
         this.qtdSeguranca = qtdSeguranca;
+    }
+
+    public String getsTipoLote() {
+        return sTipoLote;
+    }
+
+    public String getsLeadTime() {
+        return sLeadTime;
+    }
+
+    public void setsLeadTime(String sLeadTime) {
+        this.sLeadTime = sLeadTime;
+    }
+
+    /**
+     * @return the iDemanda
+     */
+    public int getiDemanda() {
+        return iDemanda;
+    }
+
+    /**
+     * @param iDemanda the iDemanda to set
+     */
+    public void setiDemanda(int iDemanda) {
+        this.iDemanda = iDemanda;
+    }
+
+    /**
+     * @return the iRecPrevisto
+     */
+    public int getiRecPrevisto() {
+        return iRecPrevisto;
+    }
+
+    /**
+     * @param iRecPrevisto the iRecPrevisto to set
+     */
+    public void setiRecPrevisto(int iRecPrevisto) {
+        this.iRecPrevisto = iRecPrevisto;
+    }
+
+    /**
+     * @return the iEstoque
+     */
+    public int getiEstoque() {
+        return iEstoque;
+    }
+
+    /**
+     * @param iEstoque the iEstoque to set
+     */
+    public void setiEstoque(int iEstoque) {
+        this.iEstoque = iEstoque;
+    }
+
+    /**
+     * @return the iNecLiquida
+     */
+    public int getiNecLiquida() {
+        return iNecLiquida;
+    }
+
+    /**
+     * @param iNecLiquida the iNecLiquida to set
+     */
+    public void setiNecLiquida(int iNecLiquida) {
+        this.iNecLiquida = iNecLiquida;
+    }
+
+    /**
+     * @return the iQtdOF_OC
+     */
+    public int getiQtdOF_OC() {
+        return iQtdOF_OC;
+    }
+
+    /**
+     * @param iQtdOF_OC the iQtdOF_OC to set
+     */
+    public void setiQtdOF_OC(int iQtdOF_OC) {
+        this.iQtdOF_OC = iQtdOF_OC;
+    }
+
+    /**
+     * @param sTipoLote the sTipoLote to set
+     */
+    public void setsTipoLote(String sTipoLote) {
+        this.sTipoLote = sTipoLote;
     }
 }
 
