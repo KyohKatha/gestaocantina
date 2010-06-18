@@ -75,11 +75,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProduto = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        ltituloCurvaABC = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
-        lLegendaProdutos = new javax.swing.JLabel();
         lCurva = new javax.swing.JLabel();
+        lLegendaProdutos = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -164,20 +163,18 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        ltituloCurvaABC.setText("Curva ABC");
-        jPanel3.add(ltituloCurvaABC, java.awt.BorderLayout.PAGE_START);
-
         jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
-        jPanel10.setLayout(new java.awt.BorderLayout());
-
-        lLegendaProdutos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lLegendaProdutos.setText("Legenda");
-        jPanel10.add(lLegendaProdutos, java.awt.BorderLayout.LINE_END);
+        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.LINE_AXIS));
 
         lCurva.setText("Aguarde: gráfico sendo carregado...");
         lCurva.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel10.add(lCurva, java.awt.BorderLayout.CENTER);
+        jPanel10.add(lCurva);
+
+        lLegendaProdutos.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lLegendaProdutos.setText("Legenda");
+        lLegendaProdutos.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jPanel10.add(lLegendaProdutos);
 
         jPanel9.add(jPanel10);
 
@@ -335,14 +332,9 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     private void tabGestaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabGestaoMouseClicked
         // TODO add your handling code here:
-        if (acp.getProdutos().isEmpty()) {
-            ltituloCurvaABC.setText("Erro: Carregue o arquivo de dados!");
-        } else {
-            ltituloCurvaABC.setText("Curva ABC");
-            lCurva.setText("Aguarde: gráfico sendo carregado...");
-            acp.gerarABC();
-            this.gerarGrafico();
-        }
+        lCurva.setText("Aguarde: gráfico sendo carregado...");
+        acp.gerarABC();
+        this.gerarGrafico();
     }//GEN-LAST:event_tabGestaoMouseClicked
 
     private void btnGerarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMouseClicked
@@ -405,7 +397,6 @@ public class FormPrincipal extends javax.swing.JFrame {
                 for (int i = 0; i < produtos.size(); i++) {
                     Produto p = produtos.get(i);
 
-                    System.out.println("NOME :: " + p.getNome());
                     //ArrayList<DadosMes> dados = p.getHistorico();
                     //double dCusto = dados.get(dados.size() - 1).getValorUnitCusto();
                     if (i == 0) {
@@ -489,7 +480,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         lCurva.repaint();
         String textoLegenda = "<html>Produtos<br><br>";
         textoLegenda += "<table border=\"1\">";
-        textoLegenda += "<tr><td>Numero</td><td>Nome</td><td>Numero</td><td>Nome</td></tr>";
+        textoLegenda += "<tr><td>#</td><td>Nome</td><td>#</td><td>Nome</td></tr>";
         for (int i = 0; i < produtos.size()/2; i++) {
             textoLegenda += "<tr><td>" + i + "</td><td>" + produtos.get(i).getNome() + "</td><td>" + (i+13) + "</td><td>" + produtos.get(i+13).getNome() + "</td></tr>";
         }
@@ -535,7 +526,6 @@ public class FormPrincipal extends javax.swing.JFrame {
                 produto.setNome(cell.getContents());
                 ArrayList<DadosMes> dadosmes = new ArrayList<DadosMes>();
 
-                System.out.println("Produto " + produto.getNome());
 
                 NumberCell ncell;
 
@@ -545,35 +535,29 @@ public class FormPrincipal extends javax.swing.JFrame {
                     cell = sheet.getCell(col, 0);
                     String sMes = cell.getContents();
                     dados.setMes(sMes);
-                    System.out.print("    Mes " + dados.getMes());
 
                     //Le ano
                     ncell = (NumberCell) sheet.getCell(col + 1, 0);
                     dados.setAno((int) ncell.getValue());
-                    System.out.println("    Ano " + dados.getAno());
 
                     //Le qtde comprada
                     ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setQtdCompra((int) ncell.getValue());
                     col++;
-                    System.out.println("        Qtde Comp  " + dados.getQtdCompra());
 
                     //Le preço de custo
                     ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setValorUnitCusto(ncell.getValue());
                     col++;
-                    System.out.println("        Custo Unit " + dados.getValorUnitCusto());
 
                     //Le qtde venda
                     ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setQtdVenda((int) ncell.getValue());
                     col++;
-                    System.out.println("        Qtde Venda " + dados.getQtdVenda());
 
                     //Le preço de venda
                     ncell = (NumberCell) sheet.getCell(col, lin);
                     dados.setValorUnitVenda(ncell.getValue());
-                    System.out.println("        Preco Unit " + dados.getValorUnitVenda());
 
                     produto.addHistorico(dados);
                 }
@@ -582,12 +566,10 @@ public class FormPrincipal extends javax.swing.JFrame {
                 ncell = (NumberCell) sheet.getCell(col, lin);
                 produto.setQtdAtual((int) ncell.getValue());
                 col++;
-                System.out.println("    Qtd " + produto.getQtdAtual());
 
                 //Le estoque de seguranca
                 ncell = (NumberCell) sheet.getCell(col, lin);
                 produto.setQtdSeguranca((int) ncell.getValue());
-                System.out.println("    Sec " + produto.getQtdSeguranca());
 
                 produtos.add(produto);
             }
@@ -598,7 +580,6 @@ public class FormPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro ao ler " + caminhoArquivo, nomeSistema, JOptionPane.ERROR_MESSAGE);
         }
 
-        System.out.println("fim");
 
         return produtos;
     }
@@ -789,13 +770,11 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
             workbook.close();
         } catch (NumberFormatException nfe) {
-            System.out.println("NumberFormatException: " + nfe.getMessage());
             //e.printStackTrace();
             //JOptionPane.showMessageDialog(rootPane, "Erro ao ler " + caminhoArquivo, nomeSistema, JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
         }
 
-        System.out.println("fim de ler MRP");
 
         return aProdutos;
     }
@@ -836,7 +815,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lCurva;
     private javax.swing.JLabel lLegendaProdutos;
-    private javax.swing.JLabel ltituloCurvaABC;
     private javax.swing.JTabbedPane tabGestao;
     private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
