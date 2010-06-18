@@ -326,7 +326,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
                 dtm.addRow(new Object[]{p.getNome(), p.getQtdAtual(), format.format(dCusto)});
             }
-            tabGestao.setVisible(true);
+            if(produtos.size() > 0) tabGestao.setVisible(true);
 
         } else {
             JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.ERROR_MESSAGE);
