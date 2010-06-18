@@ -82,10 +82,10 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton2 = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
+        cmbPolitica = new javax.swing.JComboBox();
+        btnGerar = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTabelaEstoque = new javax.swing.JTable();
         jPanelMRP = new javax.swing.JPanel();
         jComboBoxMRP = new javax.swing.JComboBox();
         jPanel11 = new javax.swing.JPanel();
@@ -190,20 +190,45 @@ public class FormPrincipal extends javax.swing.JFrame {
         jLabel6.setText("Política:   ");
         jPanel5.add(jLabel6, java.awt.BorderLayout.LINE_START);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Lote Econômico de Pedidos", "Revisão Contínua", "Sistemas de Revisão Periódica" }));
-        jPanel5.add(jComboBox1, java.awt.BorderLayout.CENTER);
+        cmbPolitica.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Lote Econômico de Pedidos", "Revisão Contínua", "Sistemas de Revisão Periódica" }));
+        jPanel5.add(cmbPolitica, java.awt.BorderLayout.CENTER);
 
-        jButton2.setText("Gerar");
-        jPanel5.add(jButton2, java.awt.BorderLayout.LINE_END);
+        btnGerar.setText("Gerar");
+        btnGerar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnGerarMouseClicked(evt);
+            }
+        });
+        jPanel5.add(btnGerar, java.awt.BorderLayout.LINE_END);
 
         jPanel4.add(jPanel5, java.awt.BorderLayout.PAGE_START);
 
-        jPanel6.setLayout(new java.awt.BorderLayout());
+        jTabelaEstoque.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jLabel7.setText("Exibir resultado aqui");
-        jPanel6.add(jLabel7, java.awt.BorderLayout.PAGE_START);
+            },
+            new String [] {
+                "Produto", "Custo Total do Sistema"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
-        jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTabelaEstoque);
+
+        jPanel4.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
         jTabbedPane1.addTab("Políticas de Estoque", jPanel4);
 
@@ -228,11 +253,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanelMRPLayout = new javax.swing.GroupLayout(jPanelMRP);
@@ -354,6 +379,39 @@ public class FormPrincipal extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jComboBoxMRPActionPerformed
+
+    private void btnGerarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMouseClicked
+        // TODO add your handling code here:
+        switch (cmbPolitica.getSelectedIndex()) {
+            case 0:
+                acp.loteEconomicoPedidos();
+                break;
+            case 1:
+                acp.revisaoContinua();
+                break;
+            case 2:
+                acp.sistemasRevisaoPeriodica();
+                break;
+        }
+
+        DefaultTableModel dtm = (DefaultTableModel) jTabelaEstoque.getModel();
+        for(int i = jTabelaEstoque.getRowCount() - 1; i >= 0 ; i--){
+            dtm.removeRow(i);
+        }
+
+        DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(2);
+
+        ArrayList<Produto> produtos = acp.getProdutos();
+
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto p = produtos.get(i);
+            double dCusto = p.getCustoSistema();
+
+            dtm.addRow(new Object[]{p.getNome(), format.format(dCusto)});
+        }
+    }//GEN-LAST:event_btnGerarMouseClicked
 
     private void gerarGrafico() {
         ArrayList<Produto> produtos = acp.getProdutos();
@@ -729,14 +787,13 @@ public class FormPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirPlanilha;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton btnGerar;
+    private javax.swing.JComboBox cmbPolitica;
     private javax.swing.JComboBox jComboBoxMRP;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -744,14 +801,15 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelDados;
     private javax.swing.JPanel jPanelMRP;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTabelaEstoque;
     private javax.swing.JTable jTableMRP;
     private javax.swing.JTable jTableProduto;
     private javax.swing.JTextField jTextField1;
