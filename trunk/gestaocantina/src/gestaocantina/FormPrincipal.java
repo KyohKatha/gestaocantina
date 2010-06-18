@@ -91,6 +91,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableMRP = new javax.swing.JTable();
+        cmbGerarMRP = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -233,11 +234,6 @@ public class FormPrincipal extends javax.swing.JFrame {
         jTabbedPane1.addTab("Políticas de Estoque", jPanel4);
 
         jComboBoxMRP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione produto", "Salgado", "Pizza", "Lanche Natural", "Achocolatado" }));
-        jComboBoxMRP.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxMRPActionPerformed(evt);
-            }
-        });
 
         jTableMRP.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -257,8 +253,15 @@ public class FormPrincipal extends javax.swing.JFrame {
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
+
+        cmbGerarMRP.setText("Gerar");
+        cmbGerarMRP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cmbGerarMRPMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelMRPLayout = new javax.swing.GroupLayout(jPanelMRP);
         jPanelMRP.setLayout(jPanelMRPLayout);
@@ -267,12 +270,16 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addComponent(jPanel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelMRPLayout.createSequentialGroup()
                 .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(376, 376, 376))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbGerarMRP)
+                .addGap(304, 304, 304))
         );
         jPanelMRPLayout.setVerticalGroup(
             jPanelMRPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMRPLayout.createSequentialGroup()
-                .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelMRPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbGerarMRP))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -328,7 +335,41 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
-    private void jComboBoxMRPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMRPActionPerformed
+    private void btnGerarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMouseClicked
+        // TODO add your handling code here:
+        switch (cmbPolitica.getSelectedIndex()) {
+            case 0:
+                acp.loteEconomicoPedidos();
+                break;
+            case 1:
+                acp.revisaoContinua();
+                break;
+            case 2:
+                acp.sistemasRevisaoPeriodica();
+                break;
+        }
+
+        DefaultTableModel dtm = (DefaultTableModel) jTabelaEstoque.getModel();
+        for(int i = jTabelaEstoque.getRowCount() - 1; i >= 0 ; i--){
+            dtm.removeRow(i);
+        }
+
+        DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(2);
+
+        ArrayList<Produto> produtos = acp.getProdutos();
+
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto p = produtos.get(i);
+            double dCusto = p.getCustoSistema();
+
+            dtm.addRow(new Object[]{p.getNome(), format.format(dCusto)});
+        }
+    }//GEN-LAST:event_btnGerarMouseClicked
+
+    private void cmbGerarMRPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbGerarMRPMouseClicked
+        // TODO add your handling code here:
         String sProduto = jComboBoxMRP.getSelectedItem().toString();
 
         if (!sProduto.equals("Selecione produto")) {
@@ -340,6 +381,11 @@ public class FormPrincipal extends javax.swing.JFrame {
                 jTableMRP.removeAll();
 
                 DefaultTableModel dtm = (DefaultTableModel) jTableMRP.getModel();
+
+                //Codigo para limpar a tabela antes de exibir
+                for(int i = jTableMRP.getRowCount() - 1; i >= 0 ; i--){
+                    dtm.removeRow(i);
+                }
                 /*
                 DecimalFormat format = new DecimalFormat();
                 format.setMaximumFractionDigits(2);
@@ -376,42 +422,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Selecione o produto a ser realizado MRP !", nomeSistema, JOptionPane.WARNING_MESSAGE);
         }
-
-
-    }//GEN-LAST:event_jComboBoxMRPActionPerformed
-
-    private void btnGerarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMouseClicked
-        // TODO add your handling code here:
-        switch (cmbPolitica.getSelectedIndex()) {
-            case 0:
-                acp.loteEconomicoPedidos();
-                break;
-            case 1:
-                acp.revisaoContinua();
-                break;
-            case 2:
-                acp.sistemasRevisaoPeriodica();
-                break;
-        }
-
-        DefaultTableModel dtm = (DefaultTableModel) jTabelaEstoque.getModel();
-        for(int i = jTabelaEstoque.getRowCount() - 1; i >= 0 ; i--){
-            dtm.removeRow(i);
-        }
-
-        DecimalFormat format = new DecimalFormat();
-        format.setMaximumFractionDigits(2);
-        format.setMinimumFractionDigits(2);
-
-        ArrayList<Produto> produtos = acp.getProdutos();
-
-        for (int i = 0; i < produtos.size(); i++) {
-            Produto p = produtos.get(i);
-            double dCusto = p.getCustoSistema();
-
-            dtm.addRow(new Object[]{p.getNome(), format.format(dCusto)});
-        }
-    }//GEN-LAST:event_btnGerarMouseClicked
+    }//GEN-LAST:event_cmbGerarMRPMouseClicked
 
     private void gerarGrafico() {
         ArrayList<Produto> produtos = acp.getProdutos();
@@ -788,6 +799,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirPlanilha;
     private javax.swing.JButton btnGerar;
+    private javax.swing.JButton cmbGerarMRP;
     private javax.swing.JComboBox cmbPolitica;
     private javax.swing.JComboBox jComboBoxMRP;
     private javax.swing.JLabel jLabel1;
