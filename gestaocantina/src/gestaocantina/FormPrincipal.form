@@ -369,7 +369,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jComboBoxMRP" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cmbGerarMRP" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnGerarMRP" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="304" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -379,7 +379,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jComboBoxMRP" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cmbGerarMRP" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnGerarMRP" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel11" max="32767" attributes="0"/>
@@ -427,12 +427,12 @@
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="6" rowCount="0">
-                            <Column editable="true" title="Item" type="java.lang.Object"/>
-                            <Column editable="true" title="Informa&#xe7;&#xf5;es" type="java.lang.Object"/>
-                            <Column editable="true" title="Semanas" type="java.lang.Object"/>
-                            <Column editable="true" title="Quarta-feira" type="java.lang.Object"/>
-                            <Column editable="true" title="Quinta-feira" type="java.lang.Object"/>
-                            <Column editable="true" title="Sexta-feira" type="java.lang.Object"/>
+                            <Column editable="false" title="Item" type="java.lang.Object"/>
+                            <Column editable="false" title="Informa&#xe7;&#xf5;es" type="java.lang.Object"/>
+                            <Column editable="false" title="Semanas" type="java.lang.Object"/>
+                            <Column editable="false" title="Quarta-feira" type="java.lang.Object"/>
+                            <Column editable="false" title="Quinta-feira" type="java.lang.Object"/>
+                            <Column editable="false" title="Sexta-feira" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -478,12 +478,12 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="cmbGerarMRP">
+            <Component class="javax.swing.JButton" name="btnGerarMRP">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gerar"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmbGerarMRPMouseClicked"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnGerarMRPMouseClicked"/>
               </Events>
             </Component>
           </SubComponents>
