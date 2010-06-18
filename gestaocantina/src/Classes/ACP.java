@@ -167,7 +167,7 @@ public class ACP {
 
             //12 pq eh por ano
             demandaPeriodo = produto.calcularDemandaMedia(12);
-            demanda = produto.calcularDemandaMedia(12);
+            demanda = produto.calcularDemanda(12);
             rp = (demandaPeriodo / 2.0) * (H * preco) + (demanda / demandaPeriodo) * (S * preco) + (H * preco * hSigmaL);
 
             produto.setCustoSistema(rp);
