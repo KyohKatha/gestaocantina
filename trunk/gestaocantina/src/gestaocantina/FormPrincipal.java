@@ -91,7 +91,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableMRP = new javax.swing.JTable();
-        cmbGerarMRP = new javax.swing.JButton();
+        btnGerarMRP = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -242,7 +242,15 @@ public class FormPrincipal extends javax.swing.JFrame {
             new String [] {
                 "Item", "Informações", "Semanas", "Quarta-feira", "Quinta-feira", "Sexta-feira"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTableMRP);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -256,10 +264,10 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
         );
 
-        cmbGerarMRP.setText("Gerar");
-        cmbGerarMRP.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnGerarMRP.setText("Gerar");
+        btnGerarMRP.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cmbGerarMRPMouseClicked(evt);
+                btnGerarMRPMouseClicked(evt);
             }
         });
 
@@ -271,7 +279,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(jPanelMRPLayout.createSequentialGroup()
                 .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbGerarMRP)
+                .addComponent(btnGerarMRP)
                 .addGap(304, 304, 304))
         );
         jPanelMRPLayout.setVerticalGroup(
@@ -279,7 +287,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGroup(jPanelMRPLayout.createSequentialGroup()
                 .addGroup(jPanelMRPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxMRP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbGerarMRP))
+                    .addComponent(btnGerarMRP))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -368,7 +376,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGerarMouseClicked
 
-    private void cmbGerarMRPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbGerarMRPMouseClicked
+    private void btnGerarMRPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMRPMouseClicked
         // TODO add your handling code here:
         String sProduto = jComboBoxMRP.getSelectedItem().toString();
 
@@ -422,7 +430,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(rootPane, "Selecione o produto a ser realizado MRP !", nomeSistema, JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_cmbGerarMRPMouseClicked
+    }//GEN-LAST:event_btnGerarMRPMouseClicked
 
     private void gerarGrafico() {
         ArrayList<Produto> produtos = acp.getProdutos();
@@ -799,7 +807,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAbrirPlanilha;
     private javax.swing.JButton btnGerar;
-    private javax.swing.JButton cmbGerarMRP;
+    private javax.swing.JButton btnGerarMRP;
     private javax.swing.JComboBox cmbPolitica;
     private javax.swing.JComboBox jComboBoxMRP;
     private javax.swing.JLabel jLabel1;
