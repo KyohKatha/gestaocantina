@@ -48,7 +48,6 @@ public class ACP {
             qtdMediaCusto /= h.size();
             produtos.get(i).setQtdMediaMensal(qtdMediaCompra);
             produtos.get(i).setCustoMedioMensal(qtdMediaCusto);
-            System.out.println("Produto1: " + produtos.get(i).getNome());
             valorTotalEstoque += produtos.get(i).valorProdutoEstoque();
         }
         //calcular a porcentagem de cada produto no estoque
@@ -65,14 +64,10 @@ public class ACP {
                 return p1.getPorcentagem() < p2.getPorcentagem() ? +1 : (p1.getPorcentagem() > p2.getPorcentagem() ? -1 : 0);
             }
         });
-        /*for(int i = 0; i < produtos.size(); i++){
-        System.out.println("Produto2: "+produtos.get(i).getNome()+"porcentagem: "+produtos.get(i).getPorcentagem());
-        }*/
 
         double numProdTipoA = produtos.size() * 0.2;
         double numProdTipoB = produtos.size() * 0.3;
         double numProdTipoC = produtos.size() * 0.5;
-        System.out.println("A: " + numProdTipoA + "B: " + numProdTipoB + "C: " + numProdTipoC);
         int i = 0;
         float acumulada = 0;
         while (i < produtos.size()) {
@@ -84,9 +79,6 @@ public class ACP {
             else
                 produtos.get(i).setTipo(2);
             i++;
-        }
-        for (i = 0; i < produtos.size(); i++) {
-            System.out.println("Produto2: " + produtos.get(i).getNome() + " Tipo: " + produtos.get(i).getTipo());
         }
     }
 
