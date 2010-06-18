@@ -14,6 +14,11 @@ import java.util.Comparator;
  */
 public class ACP {
 
+    private final double S = 0.3;
+    private final double H = 0.1;
+    private final double C = 0.15; // custo anual de manutenção do estoque cicíclo
+    private final double L = 0.3;
+
     private ArrayList<Produto> produtos;
 
     public ACP() {
@@ -101,12 +106,72 @@ public class ACP {
     }
 
     public void loteEconomicoPedidos() {
+        double demanda;
+        double lep;
+        Produto produto;
+
+        for(int i = 0; i < produtos.size(); i++){
+
+            produto = produtos.get(i);
+            //12 pq eh por ano
+            demanda = produto.calcularDemanda(12);
+
+            double preco = produto.getHistorico().get(11).getValorUnitVenda();
+
+            lep = Math.sqrt((2 * demanda * (S * preco)) / (H * preco));
+
+
+            produto.setCustoSistema(lep);
+        }
+
+
+
+
+
     }
 
     public void revisaoContinua() {
+        Produto produto;
+        double q;
+        double demanda;
+        double rc;
+
+        for(int i = 0; i < produtos.size(); i++){
+            produto = produtos.get(i);
+
+            q = produto.getHistorico().get(11).getQtdCompra();
+            double preco = produto.getHistorico().get(11).getValorUnitVenda();
+            double hSigmaL = produto.calcularDesvioPadraoDemanda(12) * Math.sqrt(L * 12);
+
+            //12 pq eh por ano
+            demanda = produto.calcularDemanda(12);
+            rc = (q / 2.0) * (H * preco) + (demanda / q) * (S * preco) + (H * preco * hSigmaL);
+
+            produto.setCustoSistema(rc);
+        }
+
+
     }
 
     public void sistemasRevisaoPeriodica() {
+        double rp;
+        Produto produto;
+        double demandaPeriodo;
+        double demanda;
+
+        for(int i = 0; i < produtos.size(); i++){
+            produto = produtos.get(i);
+
+            double preco = produto.getHistorico().get(11).getValorUnitVenda();
+            double hSigmaL = produto.calcularDesvioPadraoDemanda(12) * Math.sqrt(L * 12);
+
+            //12 pq eh por ano
+            demandaPeriodo = produto.calcularDemandaMedia(12);
+            demanda = produto.calcularDemandaMedia(12);
+            rp = (demandaPeriodo / 2.0) * (H * preco) + (demanda / demandaPeriodo) * (S * preco) + (H * preco * hSigmaL);
+
+            produto.setCustoSistema(rp);
+        }
     }
 }
 

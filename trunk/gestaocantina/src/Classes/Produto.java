@@ -19,6 +19,15 @@ public class Produto {
     private int qtdSeguranca;
     private int qtdMediaMensal;
     private double custoMedioMensal;
+    private double custoSistema;
+
+    public double getCustoSistema() {
+        return custoSistema;
+    }
+
+    public void setCustoSistema(double custoSistema) {
+        this.custoSistema = custoSistema;
+    }
 
     // MRP
     private String sTipoLote;
@@ -36,6 +45,51 @@ public class Produto {
     public void setCustoMedioMensal(double custoMedioMensal) {
         this.custoMedioMensal = custoMedioMensal;
     }
+
+    public void calcularCustoMedioMensal(){
+        double soma = 0.0;
+        for (int i = 0; i < historico.size(); i++) {
+            soma += historico.get(i).getQtdCompra();
+        }
+        soma /= historico.size();
+        this.setCustoMedioMensal(soma);
+    }
+
+    //Calcula a demanda
+    public double calcularDemanda(int t) {
+        double demanda = 0.0;
+
+        for (int i = 1; i <= t; i++) {
+            demanda += historico.get(historico.size() - i).getQtdVenda();
+        }
+        return demanda;
+    }
+
+    //Calculo da demanda médio no tempo de espera
+    public double calcularDemandaMedia(int t) {
+        double demanda = 0.0;
+
+        for (int i = 1; i <= t; i++) {
+            demanda += historico.get(historico.size() - i).getQtdVenda();
+        }
+        demanda /= t;
+        return demanda;
+    }
+
+    // Calulo do desvio padrao da demanda no tempo de espera
+    public double calcularDesvioPadraoDemanda(int t){
+        double dp = 0.0;
+        double media = this.calcularDemandaMedia(t);
+
+        for (int i = 1; i <= t; i++) {
+            dp += Math.pow(historico.get(historico.size() - i).getQtdVenda() - media, 2);
+        }
+
+        dp /= (t - 1);
+
+        return Math.sqrt(dp);
+    }
+
     //tipo: A = 0 B = 1 C = 2
     private double porcentagem;
 
