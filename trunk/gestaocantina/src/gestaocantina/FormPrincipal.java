@@ -47,7 +47,8 @@ public class FormPrincipal extends javax.swing.JFrame {
     /** Creates new form FormPrincipal */
     public FormPrincipal() {
         initComponents();
-        this.setSize(500, 500);
+        this.setExtendedState(MAXIMIZED_BOTH);
+        tabGestao.setVisible(false);
         acp = new ACP();
     }
 
@@ -67,7 +68,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         txtCaminho = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabGestao = new javax.swing.JTabbedPane();
         jPanelDados = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
@@ -126,9 +127,9 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tabGestao.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTabbedPane1MouseClicked(evt);
+                tabGestaoMouseClicked(evt);
             }
         });
 
@@ -159,7 +160,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanelDados.add(jPanel8, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Dados", jPanelDados);
+        tabGestao.addTab("Dados", jPanelDados);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -182,7 +183,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel3.add(jPanel9, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Curva ABC", jPanel3);
+        tabGestao.addTab("Curva ABC", jPanel3);
 
         jPanel4.setLayout(new java.awt.BorderLayout());
 
@@ -231,7 +232,7 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel4.add(jScrollPane3, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Políticas de Estoque", jPanel4);
+        tabGestao.addTab("Políticas de Estoque", jPanel4);
 
         jComboBoxMRP.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Selecione produto", "Salgado", "Pizza", "Lanche Natural", "Achocolatado" }));
 
@@ -292,9 +293,9 @@ public class FormPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("MRP", jPanelMRP);
+        tabGestao.addTab("MRP", jPanelMRP);
 
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(tabGestao, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -325,13 +326,14 @@ public class FormPrincipal extends javax.swing.JFrame {
 
                 dtm.addRow(new Object[]{p.getNome(), p.getQtdAtual(), format.format(dCusto)});
             }
+            tabGestao.setVisible(true);
 
         } else {
             JOptionPane.showMessageDialog(rootPane, "Informe o caminho do arquivo !", nomeSistema, JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAbrirPlanilhaMouseClicked
 
-    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+    private void tabGestaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabGestaoMouseClicked
         // TODO add your handling code here:
         if (acp.getProdutos().isEmpty()) {
             ltituloCurvaABC.setText("Erro: Carregue o arquivo de dados!");
@@ -341,7 +343,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             acp.gerarABC();
             this.gerarGrafico();
         }
-    }//GEN-LAST:event_jTabbedPane1MouseClicked
+    }//GEN-LAST:event_tabGestaoMouseClicked
 
     private void btnGerarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGerarMouseClicked
         // TODO add your handling code here:
@@ -828,7 +830,6 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTabelaEstoque;
     private javax.swing.JTable jTableMRP;
     private javax.swing.JTable jTableProduto;
@@ -836,6 +837,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lCurva;
     private javax.swing.JLabel lLegendaProdutos;
     private javax.swing.JLabel ltituloCurvaABC;
+    private javax.swing.JTabbedPane tabGestao;
     private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
     private final String nomeSistema = "Gestão Cantina";
